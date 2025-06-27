@@ -1,60 +1,74 @@
--- Advanced Fake Server Finder GUI (10-Minute Black Screen + Progress Bar)
+-- Advanced Server Finder GUI (with sound, percentage, timer, black-out finish)
 
-local Players = game:GetService("Players")
-local player = Players.LocalPlayer
-
--- Create GUI
 local gui = Instance.new("ScreenGui")
 gui.Name = "AdvanceServerUI"
 gui.ResetOnSpawn = false
 gui.IgnoreGuiInset = true
 gui.Parent = game:GetService("CoreGui")
 
--- Full black background
+-- Fullscreen black background
 local blackBG = Instance.new("Frame")
 blackBG.Size = UDim2.new(1, 0, 1, 0)
-blackBG.Position = UDim2.new(0, 0, 0, 0)
-blackBG.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+blackBG.BackgroundColor3 = Color3.new(0, 0, 0)
 blackBG.BorderSizePixel = 0
 blackBG.Parent = gui
 
--- Message Frame
+-- Central frame
 local frame = Instance.new("Frame")
-frame.Size = UDim2.new(0.4, 0, 0.18, 0)
-frame.Position = UDim2.new(0.3, 0, 0.4, 0)
+frame.Size = UDim2.new(0.4, 0, 0.3, 0)
+frame.Position = UDim2.new(0.3, 0, 0.35, 0)
 frame.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
 frame.BorderSizePixel = 0
 frame.Parent = blackBG
 
-local corner = Instance.new("UICorner")
+local corner = Instance.new("UICorner", frame)
 corner.CornerRadius = UDim.new(0, 10)
-corner.Parent = frame
 
--- Text label
+-- Message label
 local label = Instance.new("TextLabel")
-label.Size = UDim2.new(1, -20, 0.6, -20)
+label.Size = UDim2.new(1, -20, 0.3, 0)
 label.Position = UDim2.new(0, 10, 0, 10)
 label.BackgroundTransparency = 1
-label.TextColor3 = Color3.fromRGB(255, 255, 255)
+label.TextColor3 = Color3.new(1, 1, 1)
 label.Font = Enum.Font.SourceSansBold
 label.TextScaled = true
 label.TextWrapped = true
-label.Text = "Please wait..."
+label.Text = "Initializing..."
 label.Parent = frame
 
--- Progress bar background
+-- Progress percentage
+local percentLabel = Instance.new("TextLabel")
+percentLabel.Size = UDim2.new(1, -20, 0.15, 0)
+percentLabel.Position = UDim2.new(0, 10, 0.3, 10)
+percentLabel.BackgroundTransparency = 1
+percentLabel.TextColor3 = Color3.new(1, 1, 1)
+percentLabel.Font = Enum.Font.SourceSans
+percentLabel.TextScaled = true
+percentLabel.Text = "Progress: 0%"
+percentLabel.Parent = frame
+
+-- Time estimate
+local timeLabel = Instance.new("TextLabel")
+timeLabel.Size = UDim2.new(1, -20, 0.15, 0)
+timeLabel.Position = UDim2.new(0, 10, 0.45, 10)
+timeLabel.BackgroundTransparency = 1
+timeLabel.TextColor3 = Color3.new(1, 1, 1)
+timeLabel.Font = Enum.Font.SourceSans
+timeLabel.TextScaled = true
+timeLabel.Text = "Estimated time left: 10:00"
+timeLabel.Parent = frame
+
+-- Progress bar
 local progressBarBG = Instance.new("Frame")
 progressBarBG.Size = UDim2.new(1, -40, 0.15, 0)
-progressBarBG.Position = UDim2.new(0, 20, 0.75, 0)
+progressBarBG.Position = UDim2.new(0, 20, 0.65, 10)
 progressBarBG.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
 progressBarBG.BorderSizePixel = 0
 progressBarBG.Parent = frame
 
-local progressBarCorner = Instance.new("UICorner")
-progressBarCorner.CornerRadius = UDim.new(0, 6)
-progressBarCorner.Parent = progressBarBG
+local progressCorner = Instance.new("UICorner", progressBarBG)
+progressCorner.CornerRadius = UDim.new(0, 6)
 
--- Progress bar fill
 local progressFill = Instance.new("Frame")
 progressFill.Size = UDim2.new(0, 0, 1, 0)
 progressFill.Position = UDim2.new(0, 0, 0, 0)
@@ -62,11 +76,17 @@ progressFill.BackgroundColor3 = Color3.fromRGB(0, 170, 255)
 progressFill.BorderSizePixel = 0
 progressFill.Parent = progressBarBG
 
-local fillCorner = Instance.new("UICorner")
-fillCorner.CornerRadius = UDim.new(0, 6)
-fillCorner.Parent = progressFill
+Instance.new("UICorner", progressFill).CornerRadius = UDim.new(0, 6)
 
--- Message cycling
+-- Sound
+local sound = Instance.new("Sound")
+sound.SoundId = "rbxassetid://9118823106" -- ambient loop sound
+sound.Volume = 0.4
+sound.Looped = true
+sound.Parent = gui
+sound:Play()
+
+-- Messages
 local messages = {
     "Please wait...",
     "You are going to advance server soon...",
@@ -75,12 +95,13 @@ local messages = {
     "Reading your logs..."
 }
 
-local startTime = tick()
+-- Timers
 local totalTime = 600 -- 10 minutes
-local msgIndex = 1
+local startTime = tick()
 
--- Loop update
+-- Loop: Messages + Progress
 spawn(function()
+    local msgIndex = 1
     while tick() - startTime < totalTime do
         label.Text = messages[msgIndex]
         msgIndex = msgIndex % #messages + 1
@@ -88,19 +109,44 @@ spawn(function()
     end
 end)
 
--- Progress bar fill over time
+-- Loop: Progress bar, percent, and time
 spawn(function()
-    local duration = totalTime
-    local start = tick()
-    while tick() - start < duration do
-        local elapsed = tick() - start
-        local percent = math.clamp(elapsed / duration, 0, 1)
-        progressFill.Size = UDim2.new(percent, 0, 1, 0)
+    while tick() - startTime < totalTime do
+        local elapsed = tick() - startTime
+        local percent = math.clamp((elapsed / totalTime) * 100, 0, 100)
+        local remaining = math.max(0, totalTime - elapsed)
+        local minutes = math.floor(remaining / 60)
+        local seconds = math.floor(remaining % 60)
+
+        percentLabel.Text = ("Progress: %d%%"):format(percent)
+        timeLabel.Text = ("Estimated time left: %02d:%02d"):format(minutes, seconds)
+        progressFill.Size = UDim2.new(percent / 100, 0, 1, 0)
+
         wait(0.5)
     end
 end)
 
--- Destroy after 10 minutes
+-- After 10 minutes
 delay(totalTime, function()
-    gui:Destroy()
+    sound:Stop()
+    frame:Destroy()
+
+    -- Blackout and final countdown
+    local endText = Instance.new("TextLabel")
+    endText.Size = UDim2.new(1, 0, 1, 0)
+    endText.Position = UDim2.new(0, 0, 0, 0)
+    endText.BackgroundTransparency = 1
+    endText.TextColor3 = Color3.new(1, 1, 1)
+    endText.Font = Enum.Font.SourceSansBold
+    endText.TextScaled = true
+    endText.Text = "Jumping between servers in 3..."
+    endText.Parent = blackBG
+
+    for i = 2, 1, -1 do
+        wait(1)
+        endText.Text = "Jumping between servers in " .. i .. "..."
+    end
+
+    wait(1)
+    endText.Text = "" -- Just a black screen
 end)
