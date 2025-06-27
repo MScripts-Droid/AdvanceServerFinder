@@ -1,4 +1,4 @@
--- Advanced Server Finder GUI (with sound, percentage, timer, black-out finish)
+-- Roblox Advance Server GUI - Pet Scanner Edition
 
 local gui = Instance.new("ScreenGui")
 gui.Name = "AdvanceServerUI"
@@ -6,27 +6,24 @@ gui.ResetOnSpawn = false
 gui.IgnoreGuiInset = true
 gui.Parent = game:GetService("CoreGui")
 
--- Fullscreen black background
 local blackBG = Instance.new("Frame")
 blackBG.Size = UDim2.new(1, 0, 1, 0)
 blackBG.BackgroundColor3 = Color3.new(0, 0, 0)
 blackBG.BorderSizePixel = 0
 blackBG.Parent = gui
 
--- Central frame
 local frame = Instance.new("Frame")
-frame.Size = UDim2.new(0.4, 0, 0.3, 0)
-frame.Position = UDim2.new(0.3, 0, 0.35, 0)
+frame.Size = UDim2.new(0.4, 0, 0.35, 0)
+frame.Position = UDim2.new(0.3, 0, 0.33, 0)
 frame.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
 frame.BorderSizePixel = 0
 frame.Parent = blackBG
 
-local corner = Instance.new("UICorner", frame)
-corner.CornerRadius = UDim.new(0, 10)
+Instance.new("UICorner", frame).CornerRadius = UDim.new(0, 10)
 
--- Message label
+-- Text Elements
 local label = Instance.new("TextLabel")
-label.Size = UDim2.new(1, -20, 0.3, 0)
+label.Size = UDim2.new(1, -20, 0.25, 0)
 label.Position = UDim2.new(0, 10, 0, 10)
 label.BackgroundTransparency = 1
 label.TextColor3 = Color3.new(1, 1, 1)
@@ -36,10 +33,9 @@ label.TextWrapped = true
 label.Text = "Initializing..."
 label.Parent = frame
 
--- Progress percentage
 local percentLabel = Instance.new("TextLabel")
 percentLabel.Size = UDim2.new(1, -20, 0.15, 0)
-percentLabel.Position = UDim2.new(0, 10, 0.3, 10)
+percentLabel.Position = UDim2.new(0, 10, 0.27, 10)
 percentLabel.BackgroundTransparency = 1
 percentLabel.TextColor3 = Color3.new(1, 1, 1)
 percentLabel.Font = Enum.Font.SourceSans
@@ -47,10 +43,9 @@ percentLabel.TextScaled = true
 percentLabel.Text = "Progress: 0%"
 percentLabel.Parent = frame
 
--- Time estimate
 local timeLabel = Instance.new("TextLabel")
 timeLabel.Size = UDim2.new(1, -20, 0.15, 0)
-timeLabel.Position = UDim2.new(0, 10, 0.45, 10)
+timeLabel.Position = UDim2.new(0, 10, 0.42, 10)
 timeLabel.BackgroundTransparency = 1
 timeLabel.TextColor3 = Color3.new(1, 1, 1)
 timeLabel.Font = Enum.Font.SourceSans
@@ -58,16 +53,14 @@ timeLabel.TextScaled = true
 timeLabel.Text = "Estimated time left: 10:00"
 timeLabel.Parent = frame
 
--- Progress bar
 local progressBarBG = Instance.new("Frame")
 progressBarBG.Size = UDim2.new(1, -40, 0.15, 0)
-progressBarBG.Position = UDim2.new(0, 20, 0.65, 10)
+progressBarBG.Position = UDim2.new(0, 20, 0.58, 10)
 progressBarBG.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
 progressBarBG.BorderSizePixel = 0
 progressBarBG.Parent = frame
 
-local progressCorner = Instance.new("UICorner", progressBarBG)
-progressCorner.CornerRadius = UDim.new(0, 6)
+Instance.new("UICorner", progressBarBG).CornerRadius = UDim.new(0, 6)
 
 local progressFill = Instance.new("Frame")
 progressFill.Size = UDim2.new(0, 0, 1, 0)
@@ -78,38 +71,38 @@ progressFill.Parent = progressBarBG
 
 Instance.new("UICorner", progressFill).CornerRadius = UDim.new(0, 6)
 
--- Sound
+-- Background Sound
 local sound = Instance.new("Sound")
-sound.SoundId = "rbxassetid://9118823106" -- ambient loop sound
+sound.SoundId = "rbxassetid://9118823106" -- looped ambient tone
 sound.Volume = 0.4
 sound.Looped = true
 sound.Parent = gui
 sound:Play()
 
--- Messages
-local messages = {
-    "Please wait...",
-    "You are going to advance server soon...",
-    "Finding the right server for you...",
-    "Checking your credentials...",
-    "Reading your logs..."
-}
-
--- Timers
+-- Timing
 local totalTime = 600 -- 10 minutes
 local startTime = tick()
 
--- Loop: Messages + Progress
+-- Long-interval messages
+local messages = {
+    "Connecting to the secure network...",
+    "Authorizing Roblox credentials...",
+    "Requesting session access...",
+    "Reading user configuration...",
+    "Scanning activity data..."
+}
+
+-- Start message loop (every 30 sec)
 spawn(function()
-    local msgIndex = 1
+    local index = 1
     while tick() - startTime < totalTime do
-        label.Text = messages[msgIndex]
-        msgIndex = msgIndex % #messages + 1
-        wait(2)
+        label.Text = messages[index]
+        index = index % #messages + 1
+        wait(30)
     end
 end)
 
--- Loop: Progress bar, percent, and time
+-- Progress/Time Loop
 spawn(function()
     while tick() - startTime < totalTime do
         local elapsed = tick() - startTime
@@ -121,32 +114,54 @@ spawn(function()
         percentLabel.Text = ("Progress: %d%%"):format(percent)
         timeLabel.Text = ("Estimated time left: %02d:%02d"):format(minutes, seconds)
         progressFill.Size = UDim2.new(percent / 100, 0, 1, 0)
-
         wait(0.5)
     end
 end)
 
--- After 10 minutes
+-- PET SCANNING LOGIC (1 min each)
+local pets = {
+    "Raccoon",
+    "Dragonfly",
+    "Butterfly",
+    "Queen Bee",
+    "Disco Bee",
+    "Mimic Octopus"
+}
+
+spawn(function()
+    local delayPerPet = 80
+    for _, pet in ipairs(pets) do
+        label.Text = "Finding pet: " .. pet .. " (Loading...)"
+        wait(delayPerPet)
+        label.Text = "Finding pet: " .. pet .. " (Done)"
+        wait(2)
+    end
+end)
+
+-- End sequence (errors instead of success)
 delay(totalTime, function()
     sound:Stop()
     frame:Destroy()
 
-    -- Blackout and final countdown
-    local endText = Instance.new("TextLabel")
-    endText.Size = UDim2.new(1, 0, 1, 0)
-    endText.Position = UDim2.new(0, 0, 0, 0)
-    endText.BackgroundTransparency = 1
-    endText.TextColor3 = Color3.new(1, 1, 1)
-    endText.Font = Enum.Font.SourceSansBold
-    endText.TextScaled = true
-    endText.Text = "Jumping between servers in 3..."
-    endText.Parent = blackBG
+    local finalMessages = {
+        "Server cannot be found",
+        "Account not qualified",
+        "Required pets not found"
+    }
 
-    for i = 2, 1, -1 do
-        wait(1)
-        endText.Text = "Jumping between servers in " .. i .. "..."
+    for _, msg in ipairs(finalMessages) do
+        local errorLabel = Instance.new("TextLabel")
+        errorLabel.Size = UDim2.new(1, 0, 1, 0)
+        errorLabel.Position = UDim2.new(0, 0, 0, 0)
+        errorLabel.BackgroundTransparency = 1
+        errorLabel.TextColor3 = Color3.new(1, 0, 0)
+        errorLabel.Font = Enum.Font.SourceSansBold
+        errorLabel.TextScaled = true
+        errorLabel.Text = msg
+        errorLabel.Parent = blackBG
+        wait(2)
+        errorLabel:Destroy()
     end
 
-    wait(1)
-    endText.Text = "" -- Just a black screen
+    -- Black screen remains after
 end)
