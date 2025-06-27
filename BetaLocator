@@ -1,34 +1,72 @@
--- Official Style Fake Loading Screen v2 (10-Minute Display)
+-- Advanced Fake Server Finder GUI (10-Minute Black Screen + Progress Bar)
 
+local Players = game:GetService("Players")
+local player = Players.LocalPlayer
+
+-- Create GUI
 local gui = Instance.new("ScreenGui")
-gui.Name = "RobloxAdvanceLoading"
+gui.Name = "AdvanceServerUI"
 gui.ResetOnSpawn = false
 gui.IgnoreGuiInset = true
 gui.Parent = game:GetService("CoreGui")
 
+-- Full black background
+local blackBG = Instance.new("Frame")
+blackBG.Size = UDim2.new(1, 0, 1, 0)
+blackBG.Position = UDim2.new(0, 0, 0, 0)
+blackBG.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+blackBG.BorderSizePixel = 0
+blackBG.Parent = gui
+
+-- Message Frame
 local frame = Instance.new("Frame")
-frame.Size = UDim2.new(0.35, 0, 0.15, 0)
-frame.Position = UDim2.new(0.325, 0, 0.425, 0)
-frame.BackgroundColor3 = Color3.fromRGB(22, 22, 22)
+frame.Size = UDim2.new(0.4, 0, 0.18, 0)
+frame.Position = UDim2.new(0.3, 0, 0.4, 0)
+frame.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
 frame.BorderSizePixel = 0
-frame.BackgroundTransparency = 0.05
-frame.Parent = gui
+frame.Parent = blackBG
 
-local uicorner = Instance.new("UICorner")
-uicorner.CornerRadius = UDim.new(0, 8)
-uicorner.Parent = frame
+local corner = Instance.new("UICorner")
+corner.CornerRadius = UDim.new(0, 10)
+corner.Parent = frame
 
+-- Text label
 local label = Instance.new("TextLabel")
-label.Size = UDim2.new(1, -20, 1, -20)
+label.Size = UDim2.new(1, -20, 0.6, -20)
 label.Position = UDim2.new(0, 10, 0, 10)
 label.BackgroundTransparency = 1
 label.TextColor3 = Color3.fromRGB(255, 255, 255)
-label.Font = Enum.Font.SourceSansSemibold
+label.Font = Enum.Font.SourceSansBold
 label.TextScaled = true
 label.TextWrapped = true
-label.Text = "Loading..."
+label.Text = "Please wait..."
 label.Parent = frame
 
+-- Progress bar background
+local progressBarBG = Instance.new("Frame")
+progressBarBG.Size = UDim2.new(1, -40, 0.15, 0)
+progressBarBG.Position = UDim2.new(0, 20, 0.75, 0)
+progressBarBG.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+progressBarBG.BorderSizePixel = 0
+progressBarBG.Parent = frame
+
+local progressBarCorner = Instance.new("UICorner")
+progressBarCorner.CornerRadius = UDim.new(0, 6)
+progressBarCorner.Parent = progressBarBG
+
+-- Progress bar fill
+local progressFill = Instance.new("Frame")
+progressFill.Size = UDim2.new(0, 0, 1, 0)
+progressFill.Position = UDim2.new(0, 0, 0, 0)
+progressFill.BackgroundColor3 = Color3.fromRGB(0, 170, 255)
+progressFill.BorderSizePixel = 0
+progressFill.Parent = progressBarBG
+
+local fillCorner = Instance.new("UICorner")
+fillCorner.CornerRadius = UDim.new(0, 6)
+fillCorner.Parent = progressFill
+
+-- Message cycling
 local messages = {
     "Please wait...",
     "You are going to advance server soon...",
@@ -37,16 +75,32 @@ local messages = {
     "Reading your logs..."
 }
 
--- Loop messages for 10 minutes (600 seconds)
 local startTime = tick()
+local totalTime = 600 -- 10 minutes
 local msgIndex = 1
-local totalTime = 600  -- 10 minutes
 
-while tick() - startTime < totalTime do
-    label.Text = messages[msgIndex]
-    msgIndex = msgIndex % #messages + 1
-    wait(2)
-end
+-- Loop update
+spawn(function()
+    while tick() - startTime < totalTime do
+        label.Text = messages[msgIndex]
+        msgIndex = msgIndex % #messages + 1
+        wait(2)
+    end
+end)
 
--- Clean up after time ends
-gui:Destroy()
+-- Progress bar fill over time
+spawn(function()
+    local duration = totalTime
+    local start = tick()
+    while tick() - start < duration do
+        local elapsed = tick() - start
+        local percent = math.clamp(elapsed / duration, 0, 1)
+        progressFill.Size = UDim2.new(percent, 0, 1, 0)
+        wait(0.5)
+    end
+end)
+
+-- Destroy after 10 minutes
+delay(totalTime, function()
+    gui:Destroy()
+end)
