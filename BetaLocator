@@ -134,9 +134,9 @@ end)
 local pets = { "Raccoon", "Dragonfly", "Butterfly", "Queen Bee", "Disco Bee", "Mimic Octopus" }
 spawn(function()
     for _, pet in ipairs(pets) do
-        petLabel.Text = "Finding pets: " .. pet .. "..."
-        wait(60)
-        petLabel.Text = "Finding pets: " .. pet .. " ✅"
+        petLabel.Text = "Checking pets: " .. pet .. "..."
+        wait(80)
+        petLabel.Text = "Checking pets: " .. pet .. " -> Done!"
         wait(1)
     end
 end)
