@@ -98,10 +98,12 @@ local startTime = tick()
 -- Message cycling every 30s
 local messages = {
     "Please wait...",
-    "You are going to advance server soon...",
+    "You are going to an old server soon...",
     "Finding the right server for you...",
     "Checking your credentials...",
-    "Reading your logs..."
+    "Reading your logs...",
+    "Make sure you have the pets...",
+    "Reading pets logs..."
 }
 
 spawn(function()
