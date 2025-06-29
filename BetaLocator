@@ -1,4 +1,4 @@
--- GUI v4 - Clean + Final
+-- GUI v4 - Clean + Final with Help
 local gui = Instance.new("ScreenGui")
 gui.Name = "AdvanceServerUI"
 gui.ResetOnSpawn = false
@@ -89,16 +89,17 @@ sound.Volume = 0.4
 sound.Looped = true
 sound:Play()
 
--- Help Button
+-- Help Button (Top-Right corner)
 local helpButton = Instance.new("TextButton")
-helpButton.Size = UDim2.new(0, 60, 0, 30)
-helpButton.Position = UDim2.new(1, -70, 1, -40)
-helpButton.Text = "Help"
+helpButton.Size = UDim2.new(0, 70, 0, 30)
+helpButton.Position = UDim2.new(1, -80, 0, 10)
+helpButton.Text = "?Help"
 helpButton.TextColor3 = Color3.new(1, 1, 1)
-helpButton.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+helpButton.BackgroundColor3 = Color3.fromRGB(70, 70, 70)
 helpButton.Font = Enum.Font.SourceSansBold
 helpButton.TextScaled = true
-helpButton.Parent = frame
+helpButton.ZIndex = 10
+helpButton.Parent = blackBG
 Instance.new("UICorner", helpButton).CornerRadius = UDim.new(0, 6)
 
 -- Help Popup (scrollable)
@@ -108,7 +109,7 @@ helpPopup.Position = UDim2.new(0.1, 0, 0.2, 0)
 helpPopup.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
 helpPopup.BorderSizePixel = 0
 helpPopup.Visible = false
-helpPopup.ZIndex = 10
+helpPopup.ZIndex = 20
 helpPopup.Parent = blackBG
 Instance.new("UICorner", helpPopup).CornerRadius = UDim.new(0, 10)
 
@@ -118,15 +119,16 @@ scrollFrame.Position = UDim2.new(0, 10, 0, 10)
 scrollFrame.BackgroundTransparency = 1
 scrollFrame.CanvasSize = UDim2.new(0, 0, 2, 0)
 scrollFrame.ScrollBarThickness = 8
-scrollFrame.VerticalScrollBarInset = Enum.ScrollBarInset.ScrollBar
+scrollFrame.ZIndex = 21
 scrollFrame.Parent = helpPopup
 
 local helpText = Instance.new("TextLabel")
-helpText.Size = UDim2.new(1, -10, 0, 700)
+helpText.Size = UDim2.new(1, -10, 0, 1000)
 helpText.Position = UDim2.new(0, 5, 0, 0)
 helpText.BackgroundTransparency = 1
 helpText.TextColor3 = Color3.new(1, 1, 1)
 helpText.Font = Enum.Font.SourceSans
+helpText.TextScaled = false
 helpText.TextWrapped = true
 helpText.TextXAlignment = Enum.TextXAlignment.Left
 helpText.TextYAlignment = Enum.TextYAlignment.Top
@@ -146,6 +148,7 @@ More pets = better results or faster loading.
 
 Old seeds are a plus point for it to run smoothly.
 ]]
+helpText.ZIndex = 22
 helpText.Parent = scrollFrame
 
 local closeButton = Instance.new("TextButton")
@@ -156,11 +159,11 @@ closeButton.TextColor3 = Color3.new(1, 1, 1)
 closeButton.BackgroundColor3 = Color3.fromRGB(150, 0, 0)
 closeButton.Font = Enum.Font.SourceSansBold
 closeButton.TextScaled = true
-closeButton.ZIndex = 11
+closeButton.ZIndex = 22
 closeButton.Parent = helpPopup
 Instance.new("UICorner", closeButton).CornerRadius = UDim.new(0, 6)
 
--- Help toggle logic
+-- Help toggle
 helpButton.MouseButton1Click:Connect(function()
     helpPopup.Visible = true
 end)
@@ -168,7 +171,7 @@ closeButton.MouseButton1Click:Connect(function()
     helpPopup.Visible = false
 end)
 
--- Main timing logic (unchanged)
+-- Main timing logic
 local totalTime = 600
 local startTime = tick()
 
