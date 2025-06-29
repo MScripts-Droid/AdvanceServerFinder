@@ -139,15 +139,17 @@ For the script to run properly and fast, there are things that your account must
 First, your Grow a Garden account must be made on or before the Easter Egg event — meaning no alts and no accounts made right after the Night Event (or on the Bee Event).
 
 OR have rare old pets like a Dragonfly or Raccoon.
+
 These are the included pets:
 A Panda, Dragonfly, Raccoon, Butterfly, Queen Bee, Disco Bee, or the new Mimic Octopus and Fennec Fox.
 
 Why do you need those rare pets you ask?
 Rare pets means fewer people have them, meaning fewer log details = faster logs reading.
-More pets = better results or faster loading.
 
+More pets = better results or faster loading.
 Old seeds are a plus point for it to run smoothly.
 ]]
+helpText.TextSize = 25
 helpText.ZIndex = 22
 helpText.Parent = scrollFrame
 
