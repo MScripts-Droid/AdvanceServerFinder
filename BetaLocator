@@ -1,3 +1,5 @@
+ GUI v4 - Clean + Final
+
 local gui = Instance.new("ScreenGui")
 gui.Name = "AdvanceServerUI"
 gui.ResetOnSpawn = false
@@ -82,7 +84,6 @@ petLabel.TextScaled = true
 petLabel.Text = ""
 petLabel.Parent = frame
 
--- Help Button
 local helpButton = Instance.new("TextButton")
 helpButton.Size = UDim2.new(0, 60, 0, 30)
 helpButton.Position = UDim2.new(1, -70, 1, -40)
@@ -105,16 +106,18 @@ helpPopup.ZIndex = 10
 helpPopup.Parent = blackBG
 Instance.new("UICorner", helpPopup).CornerRadius = UDim.new(0, 10)
 
+-- Scrolling container
 local scrollFrame = Instance.new("ScrollingFrame")
 scrollFrame.Size = UDim2.new(1, -20, 1, -60)
 scrollFrame.Position = UDim2.new(0, 10, 0, 10)
 scrollFrame.BackgroundTransparency = 1
-scrollFrame.CanvasSize = UDim2.new(0, 0, 2.5, 0)
+scrollFrame.CanvasSize = UDim2.new(0, 0, 1.5, 0) -- adjust if you add more text
 scrollFrame.ScrollBarThickness = 8
 scrollFrame.VerticalScrollBarInset = Enum.ScrollBarInset.ScrollBar
 scrollFrame.ZIndex = 10
 scrollFrame.Parent = helpPopup
 
+-- Help Text inside scroll frame
 local helpText = Instance.new("TextLabel")
 helpText.Size = UDim2.new(1, -10, 0, 1000)
 helpText.Position = UDim2.new(0, 5, 0, 0)
@@ -143,6 +146,7 @@ Old seeds are a plus point for it to run smoothly.
 ]]
 helpText.Parent = scrollFrame
 
+-- Close Button
 local closeButton = Instance.new("TextButton")
 closeButton.Size = UDim2.new(0, 60, 0, 30)
 closeButton.Position = UDim2.new(1, -70, 1, -40)
@@ -155,7 +159,7 @@ closeButton.ZIndex = 11
 closeButton.Parent = helpPopup
 Instance.new("UICorner", closeButton).CornerRadius = UDim.new(0, 6)
 
--- Toggle Help Popup
+-- Toggle visibility
 helpButton.MouseButton1Click:Connect(function()
     helpPopup.Visible = true
 end)
@@ -184,6 +188,7 @@ local messages = {
     "Make sure you have the pets...",
     "Reading pets logs..."
 }
+
 spawn(function()
     local msgIndex = 1
     while tick() - startTime < totalTime do
@@ -210,7 +215,7 @@ spawn(function()
     end
 end)
 
--- Pet scanning
+-- Pet scanning (1 minute each)
 local pets = { "Raccoon", "Dragonfly", "Butterfly", "Queen Bee", "Disco Bee", "Mimic Octopus" }
 spawn(function()
     for _, pet in ipairs(pets) do
