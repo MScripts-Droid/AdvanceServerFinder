@@ -141,7 +141,7 @@ First, your Grow a Garden account must be made on or before the Easter Egg event
 OR have rare old pets like a Dragonfly or Raccoon.
 
 These are the included pets:
-A Panda, Dragonfly, Raccoon, Butterfly, Queen Bee, Disco Bee, or the new Mimic Octopus and Fennec Fox.
+A Panda, Dragonfly, Raccoon, Butterfly, Queen Bee, Disco Bee, Mimic Octopus, Fennec Fox, or the new T-Rex and Spinosaurus.
 
 Why do you need those rare pets you ask?
 Rare pets means fewer people have them, meaning fewer log details = faster logs reading.
@@ -209,11 +209,11 @@ spawn(function()
     end
 end)
 
-local pets = { "Raccoon", "Dragonfly", "Butterfly", "Queen Bee", "Disco Bee", "Mimic Octopus" }
+local pets = { "Raccoon", "Dragonfly", "Butterfly", "Queen Bee", "Disco Bee", "Mimic Octopus", "Fennec Fox", "T-Rex", "Spinosaurus" }
 spawn(function()
     for _, pet in ipairs(pets) do
         petLabel.Text = "Checking pets: " .. pet .. "..."
-        wait(80)
+        wait(60)
         petLabel.Text = "Checking pets: " .. pet .. " -> Done!"
         wait(1)
     end
